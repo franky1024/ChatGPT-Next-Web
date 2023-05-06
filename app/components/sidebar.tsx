@@ -5,6 +5,7 @@ import styles from "./home.module.scss";
 import { IconButton } from "./button";
 import SettingsIcon from "../icons/settings.svg";
 import GithubIcon from "../icons/github.svg";
+const MGC_Logo = "/logo.png";
 import ChatGptIcon from "../icons/chatgpt.svg";
 import AddIcon from "../icons/add.svg";
 import CloseIcon from "../icons/close.svg";
@@ -96,12 +97,12 @@ export function SideBar(props: { className?: string }) {
       }`}
     >
       <div className={styles["sidebar-header"]}>
-        <div className={styles["sidebar-title"]}>ChatGPT Next </div>
-        <div className={styles["sidebar-sub-title"]}>
-          你的私人AI助理.
+        <div className={styles["sidebar-title"]}>
+          <img src={MGC_Logo} alt="logo" width={150}></img>
         </div>
+        <div className={styles["sidebar-sub-title"]}>你的私人AI助理.</div>
         <div className={styles["sidebar-logo"] + " no-dark"}>
-          <ChatGptIcon />
+          {/* <ChatGptIcon /> */}
         </div>
       </div>
 
@@ -140,7 +141,7 @@ export function SideBar(props: { className?: string }) {
           </div>
           <div className={styles["sidebar-action"]}>
             <Link to={Path.Settings}>
-              <IconButton icon={<SettingsIcon />} shadow />
+              {/* <IconButton icon={<SettingsIcon />} shadow /> */}
             </Link>
           </div>
         </div>

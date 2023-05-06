@@ -6,6 +6,7 @@ import EmojiPicker, {
 
 import { ModelType } from "../store";
 
+const BotImg = "/bot.png";
 import BotIcon from "../icons/bot.svg";
 import BlackBotIcon from "../icons/black-bot.svg";
 
@@ -32,11 +33,14 @@ export function Avatar(props: { model?: ModelType; avatar?: string }) {
   if (props.model) {
     return (
       <div className="no-dark">
+        <img src={BotImg} alt="avatar" className="user-avatar" />
+        {/*
         {props.model?.startsWith("gpt-4") ? (
           <BlackBotIcon className="user-avatar" />
         ) : (
           <BotIcon className="user-avatar" />
         )}
+        */}
       </div>
     );
   }

@@ -100,13 +100,13 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-title"]}>
           <img src={MGC_Logo} alt="logo" width={150}></img>
         </div>
-        <div className={styles["sidebar-sub-title"]}>你的私人AI助理.</div>
+        <div className={styles["sidebar-sub-title"]}>您的私人AI助理</div>
         <div className={styles["sidebar-logo"] + " no-dark"}>
           {/* <ChatGptIcon /> */}
         </div>
       </div>
 
-      <div className={styles["sidebar-header-bar"]}>
+      {/* <div className={styles["sidebar-header-bar"]}>
         <IconButton
           icon={<MaskIcon />}
           text={shouldNarrow ? undefined : Locale.Mask.Name}
@@ -114,7 +114,7 @@ export function SideBar(props: { className?: string }) {
           onClick={() => navigate(Path.NewChat, { state: { fromHome: true } })}
           shadow
         />
-      </div>
+      </div> */}
 
       <div
         className={styles["sidebar-body"]}

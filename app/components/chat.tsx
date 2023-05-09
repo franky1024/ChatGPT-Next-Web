@@ -649,17 +649,17 @@ export function Chat() {
     //   .addClass(`status-${status}`)
     //   .text(text[status])
     if (status === "ing") {
-      showToast("ing");
+      console.log("speeching.");
     } else if (status === "init") {
-      showToast("init");
+      console.log("mic init ok.");
     } else {
       setUserInput(iatRecorder.resultText);
     }
   };
+
   // 监听识别结果的变化
   iatRecorder.onTextChange = function (text: string) {
     setUserInput(text);
-    // $('#result_output').text(text)
   };
 
   return (
@@ -843,15 +843,17 @@ export function Chat() {
           }}
           //开始录制语音
           startSpeech={() => {
-            //showToast(Locale.WIP);
             // ======================开始调用=============================
-
             if (iatRecorder.status === "ing") {
               iatRecorder.stop();
               console.log("stop speech");
+              setUserInput(
+                iatRecorder.resultText ? iatRecorder.resultText : "",
+              );
             } else {
               iatRecorder.start();
               console.log("start speech");
+              showToast("请开始说出您的需求");
             }
           }}
         />

@@ -649,13 +649,16 @@ export function Chat() {
     //   .addClass(`status-${status}`)
     //   .text(text[status])
     if (status === "ing") {
+      showToast("ing");
     } else if (status === "init") {
+      showToast("init");
     } else {
-      inputRef.current?.append(iatRecorder.resultText);
+      setUserInput(iatRecorder.resultText);
     }
   };
   // 监听识别结果的变化
   iatRecorder.onTextChange = function (text: string) {
+    setUserInput(text);
     // $('#result_output').text(text)
   };
 
@@ -847,7 +850,6 @@ export function Chat() {
               iatRecorder.stop();
             } else {
               iatRecorder.start();
-              inputRef.current!.innerText = "123123";
             }
           }}
         />

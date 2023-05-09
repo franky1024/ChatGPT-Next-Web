@@ -630,6 +630,7 @@ export function Chat() {
   const autoFocus = !isMobileScreen || isChat; // only focus in chat page
 
   const iatRecorder = new Iat.IatRecorder("zh_cn", "mandarin");
+  let speech_status = "";
   //状态改变时处罚
   iatRecorder.onWillStatusChange = function (
     oldStatus: string,
@@ -648,12 +649,13 @@ export function Chat() {
     //   .removeClass(`status-${oldStatus}`)
     //   .addClass(`status-${status}`)
     //   .text(text[status])
+    speech_status = status;
     if (status === "ing") {
       console.log("speeching.");
     } else if (status === "init") {
       console.log("mic init ok.");
     } else {
-      setUserInput(iatRecorder.resultText);
+      //setUserInput(iatRecorder.resultText);
     }
   };
 
@@ -844,15 +846,15 @@ export function Chat() {
           //开始录制语音
           startSpeech={() => {
             // ======================开始调用=============================
-            if (iatRecorder.status === "ing") {
+            if (speech_status === "ing") {
               iatRecorder.stop();
-              console.log("stop speech");
-              setUserInput(
-                iatRecorder.resultText ? iatRecorder.resultText : "",
-              );
+              console.log("stop speech.");
+              // setUserInput(
+              //   iatRecorder.resultText ? iatRecorder.resultText : "",
+              // );
             } else {
               iatRecorder.start();
-              console.log("start speech");
+              console.log("start speech.");
               showToast("请开始说出您的需求");
             }
           }}

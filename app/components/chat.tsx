@@ -848,8 +848,10 @@ export function Chat() {
 
             if (iatRecorder.status === "ing") {
               iatRecorder.stop();
+              console.log("stop speech");
             } else {
               iatRecorder.start();
+              console.log("start speech");
             }
           }}
         />

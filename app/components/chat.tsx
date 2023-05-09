@@ -11,6 +11,7 @@ import DownloadIcon from "../icons/download.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import PromptIcon from "../icons/prompt.svg";
 import MaskIcon from "../icons/mask.svg";
+import SpeechIcon from "../icons/speech.svg";
 import MaxIcon from "../icons/max.svg";
 import MinIcon from "../icons/min.svg";
 import ResetIcon from "../icons/reload.svg";
@@ -20,6 +21,8 @@ import DarkIcon from "../icons/dark.svg";
 import AutoIcon from "../icons/auto.svg";
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
+
+const Iat = require("../iat_ws/iat");
 
 import {
   Message,
@@ -53,7 +56,7 @@ import { IconButton } from "./button";
 import styles from "./home.module.scss";
 import chatStyle from "./chat.module.scss";
 
-import { ListItem, Modal, showModal } from "./ui-lib";
+import { ListItem, Modal, showModal, showToast } from "./ui-lib";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Path } from "../constant";
 import { Avatar } from "./emoji";
@@ -318,6 +321,7 @@ export function ChatActions(props: {
   showPromptModal: () => void;
   scrollToBottom: () => void;
   showPromptHints: () => void;
+  startSpeech: () => void;
   hitBottom: boolean;
 }) {
   const config = useAppConfig();
@@ -391,6 +395,13 @@ export function ChatActions(props: {
         }}
       >
         <MaskIcon />
+      </div>
+
+      <div
+        className={`${chatStyle["chat-input-action"]} clickable`}
+        onClick={props.startSpeech}
+      >
+        <SpeechIcon />
       </div>
     </div>
   );
@@ -618,6 +629,36 @@ export function Chat() {
   const isChat = location.pathname === Path.Chat;
   const autoFocus = !isMobileScreen || isChat; // only focus in chat page
 
+  const iatRecorder = new Iat.IatRecorder("zh_cn", "mandarin");
+  //状态改变时处罚
+  iatRecorder.onWillStatusChange = function (
+    oldStatus: string,
+    status: string,
+  ) {
+    // 可以在这里进行页面中一些交互逻辑处理：倒计时（听写只有60s）,录音的动画，按钮交互等
+    // 按钮中的文字
+    // var text = {
+    //   null: '开始识别', // 最开始状态
+    //   init: '开始识别', // 初始化状态
+    //   ing: '结束识别', // 正在录音状态
+    //   end: '开始识别', // 结束状态
+    // };
+    //let senconds = 0
+    // $('.taste-button')
+    //   .removeClass(`status-${oldStatus}`)
+    //   .addClass(`status-${status}`)
+    //   .text(text[status])
+    if (status === "ing") {
+    } else if (status === "init") {
+    } else {
+      inputRef.current?.append(iatRecorder.resultText);
+    }
+  };
+  // 监听识别结果的变化
+  iatRecorder.onTextChange = function (text: string) {
+    // $('#result_output').text(text)
+  };
+
   return (
     <div className={styles.chat} key={session.id}>
       <div className="window-header">
@@ -797,6 +838,18 @@ export function Chat() {
             inputRef.current?.focus();
             onSearch("");
           }}
+          //开始录制语音
+          startSpeech={() => {
+            //showToast(Locale.WIP);
+            // ======================开始调用=============================
+
+            if (iatRecorder.status === "ing") {
+              iatRecorder.stop();
+            } else {
+              iatRecorder.start();
+              inputRef.current!.innerText = "123123";
+            }
+          }}
         />
         <div className={styles["chat-input-panel-inner"]}>
           <textarea
@@ -813,9 +866,9 @@ export function Chat() {
           />
           <IconButton
             icon={<SendWhiteIcon />}
-            text={Locale.Chat.Send}
+            title={Locale.Chat.Send}
             className={styles["chat-input-send"]}
-            type="primary"
+            type="danger"
             onClick={onUserSubmit}
           />
         </div>

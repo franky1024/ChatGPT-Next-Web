@@ -24,6 +24,14 @@ const nextConfig = {
       use: ["@svgr/webpack"],
     });
 
+    config.module.rules.push({
+      test: /\.worker.js$/,
+      use: {
+        loader: 'worker-loader',
+        options: { inline: true, name: 'workerName.[hash].js' }
+      }
+    });
+
     return config;
   },
   output: "standalone",

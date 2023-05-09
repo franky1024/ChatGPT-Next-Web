@@ -12,6 +12,7 @@ import LoadingIcon from "../icons/three-dots.svg";
 import PromptIcon from "../icons/prompt.svg";
 import MaskIcon from "../icons/mask.svg";
 import SpeechIcon from "../icons/speech.svg";
+import Speech1Icon from "../icons/speech1.svg";
 import MaxIcon from "../icons/max.svg";
 import MinIcon from "../icons/min.svg";
 import ResetIcon from "../icons/reload.svg";
@@ -322,6 +323,7 @@ export function ChatActions(props: {
   scrollToBottom: () => void;
   showPromptHints: () => void;
   startSpeech: () => void;
+  stopSpeech: () => void;
   hitBottom: boolean;
 }) {
   const config = useAppConfig();
@@ -400,6 +402,13 @@ export function ChatActions(props: {
       <div
         className={`${chatStyle["chat-input-action"]} clickable`}
         onClick={props.startSpeech}
+      >
+        <Speech1Icon />
+      </div>
+
+      <div
+        className={`${chatStyle["chat-input-action"]} clickable`}
+        onClick={props.stopSpeech}
       >
         <SpeechIcon />
       </div>
@@ -843,21 +852,22 @@ export function Chat() {
             inputRef.current?.focus();
             onSearch("");
           }}
-          //开始录制语音
+          stopSpeech={() => {
+            iatRecorder.stop();
+            console.log("stop speech.");
+          }}
           startSpeech={() => {
             // ======================开始调用=============================
-
-            console.log("speech_status", speech_status);
-            console.log("iatRecorder_status", iatRecorder.status);
-
-            if (speech_status === "ing") {
-              iatRecorder.stop();
-              console.log("stop speech.");
-            } else {
-              iatRecorder.start();
-              //console.log("start speech.");
-              showToast("请开始说出您的需求");
-            }
+            // console.log("speech_status", speech_status);
+            // console.log("iatRecorder_status", iatRecorder.status);
+            // if (speech_status === "ing") {
+            //   iatRecorder.stop();
+            //   console.log("stop speech.");
+            // } else {
+            iatRecorder.start();
+            //   //console.log("start speech.");
+            showToast("请开始说出您的需求");
+            // }
           }}
         />
         <div className={styles["chat-input-panel-inner"]}>

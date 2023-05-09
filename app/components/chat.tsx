@@ -846,15 +846,16 @@ export function Chat() {
           //开始录制语音
           startSpeech={() => {
             // ======================开始调用=============================
+
+            console.log("speech_status", speech_status);
+            console.log("iatRecorder_status", iatRecorder.status);
+
             if (speech_status === "ing") {
               iatRecorder.stop();
               console.log("stop speech.");
-              // setUserInput(
-              //   iatRecorder.resultText ? iatRecorder.resultText : "",
-              // );
             } else {
               iatRecorder.start();
-              console.log("start speech.");
+              //console.log("start speech.");
               showToast("请开始说出您的需求");
             }
           }}

@@ -412,13 +412,13 @@ export function ChatActions(props: {
       >
         <Speech1Icon />
       </div>
-
+      {/* 
       <div
         className={`${chatStyle["chat-input-action"]} clickable`}
         onClick={props.stopSpeech}
       >
         <SpeechIcon />
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -440,6 +440,7 @@ export function Chat() {
   const [recognizer, setRecognizer] = useState<sdk.SpeechRecognizer | null>(
     null,
   );
+  const [showVideoPanel, setShowVideoPanel] = useState(false);
 
   useEffect(() => {
     if (status === "recording" && !isListening) {
@@ -766,6 +767,15 @@ export function Chat() {
   const isChat = location.pathname === Path.Chat;
   const autoFocus = !isMobileScreen || isChat; // only focus in chat page
 
+  function btnShowVideoPanel() {
+    console.log("显示");
+    setShowVideoPanel(true);
+  }
+  function btnHideVideoPanel() {
+    console.log("隐藏");
+    setShowVideoPanel(false);
+  }
+
   return (
     <div className={styles.chat} key={session.id}>
       <div className="window-header">
@@ -946,7 +956,7 @@ export function Chat() {
             onSearch("");
           }}
           stopSpeech={stopRecording}
-          startSpeech={startRecording}
+          startSpeech={btnShowVideoPanel}
         />
         <div className={styles["chat-input-panel-inner"]}>
           <textarea
@@ -969,6 +979,44 @@ export function Chat() {
             onClick={onUserSubmit}
           />
         </div>
+        {showVideoPanel ? (
+          <div className={chatStyle["speak-video-panel"]}>
+            <div>
+              <textarea
+                ref={inputRef}
+                className={chatStyle["speak-btn"]}
+                onInput={(e) => onInput(e.currentTarget.value)}
+                value={userInput}
+                onKeyDown={onInputKeyDown}
+                onFocus={() => setAutoScroll(true)}
+                onBlur={() => setAutoScroll(false)}
+                rows={4}
+                autoFocus={autoFocus}
+              />
+            </div>
+            <div className={chatStyle["speak-btn"]}>
+              <div className={chatStyle["btn1"]}>
+                {/* //"idle" | "waiting" | "speaking" | "recording" */}
+                {status === "recording" ? (
+                  <span onClick={btnShowVideoPanel}>清空{status}</span>
+                ) : (
+                  <span onClick={btnHideVideoPanel}>关闭</span>
+                )}
+              </div>
+              <div className={chatStyle["btn2"]}>
+                <p>按住说话</p>
+                <p>
+                  <p>
+                    <img src="/video.png" onClick={startRecording}></img>
+                  </p>
+                </p>
+              </div>
+              <div className={chatStyle["btn3"]}>
+                <span>发送</span>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

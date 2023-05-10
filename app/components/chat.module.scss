@@ -107,3 +107,53 @@
     user-select: text;
   }
 }
+.speak-video-panel{
+  position: absolute;
+  bottom: 10px;
+  background-color: #fff;
+  width: 100%;
+  left: 0px;
+  height: 100%;
+  border-top: 1px solid #f3f3f3;
+  height: 170px;
+
+  textarea{
+    margin-top: 5px;
+    width: 100%;
+    padding: 5px 15px;
+    border: none;
+    :hover :focus :focus-visible{
+      border: none;
+    }
+  }
+  .speak-btn{
+    display: flex;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+
+    p{
+      margin: 0px;
+      padding: 0px;
+    }
+    .btn2 p:last-child{
+      p{
+        background-color:#1b9d1b;
+        border-radius: 32px;
+        width: 43px;
+        margin: 0px auto;
+        margin-top: 5px;
+      }
+      img{
+        width: 28px;
+        padding: 5px;
+      }
+    }
+    .btn1,.btn2,.btn3{
+      flex: 1;
+    }
+    .btn1,.btn3{
+      margin-top: 15px;
+    }
+  }
+}

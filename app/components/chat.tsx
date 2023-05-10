@@ -467,6 +467,12 @@ export function Chat() {
     }
   }, [status]);
 
+  useEffect(() => {
+    if (transcript.length !== 0 && transcript !== "undefined") {
+      setUserInput(transcript);
+    }
+  }, [transcript]);
+
   //开始语音识别
   const startSpeechRecognition = () => {
     setWaiting(true);

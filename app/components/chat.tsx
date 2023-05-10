@@ -1,5 +1,7 @@
 import { useDebouncedCallback } from "use-debounce";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { isMobile } from "react-device-detect";
+import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 
 import SendWhiteIcon from "../icons/send-white.svg";
 import BrainIcon from "../icons/brain.svg";
@@ -23,7 +25,12 @@ import AutoIcon from "../icons/auto.svg";
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 
-const Iat = require("../iat_ws/iat");
+import {
+  speechSynthesis,
+  stopSpeechSynthesis,
+  pauseSpeechSynthesis,
+  resumeSpeechSynthesis,
+} from "../azure/speechSynthesis";
 
 import {
   Message,
@@ -416,7 +423,122 @@ export function ChatActions(props: {
   );
 }
 
+type baseStatus = "idle" | "waiting" | "speaking" | "recording";
+const subscriptionKey = "7fed2d7dc3914996b2f16a59bf66081b";
+const region = "eastus";
+const language = "zh-CN";
+
 export function Chat() {
+  const [status, setStatus] = useState<baseStatus>("idle");
+  const [finished, setFinished] = useState<boolean>(true); // audio finished playing
+  // speech to text transcript
+  const [transcript, setTranscript] = useState("");
+  // speech to text listening status
+  const [isListening, setIsListening] = useState(false);
+  // speech to text waiting status
+  const [waiting, setWaiting] = useState(false);
+  const [recognizer, setRecognizer] = useState<sdk.SpeechRecognizer | null>(
+    null,
+  );
+
+  useEffect(() => {
+    if (status === "recording" && !isListening) {
+      stopRecording();
+    }
+  }, [isListening]);
+
+  useEffect(() => {
+    if (isListening) {
+      startSpeechRecognition();
+    } else {
+      if (recognizer) {
+        recognizer.stopContinuousRecognitionAsync();
+      } else {
+        console.log("Recognizer is null");
+      }
+    }
+  }, [isListening]);
+
+  useEffect(() => {
+    if (status === "recording") {
+      setIsListening(true);
+    } else {
+      setIsListening(false);
+    }
+  }, [status]);
+
+  //开始语音识别
+  const startSpeechRecognition = () => {
+    setWaiting(true);
+
+    const speechConfig = sdk.SpeechConfig.fromSubscription(
+      subscriptionKey,
+      region,
+    );
+    speechConfig.speechRecognitionLanguage = language;
+
+    const audioConfig = sdk.AudioConfig.fromDefaultMicrophoneInput();
+    const newRecognizer = new sdk.SpeechRecognizer(speechConfig, audioConfig);
+
+    newRecognizer.recognizing = (s, e) => {
+      console.log(`Recognizing: ${e.result.text}`);
+    };
+
+    newRecognizer.recognized = (s, e) => {
+      console.log(`Recognized: ${e.result.text}`);
+      if (e.result.text !== undefined) {
+        setTranscript(e.result.text);
+      }
+    };
+
+    newRecognizer.canceled = (s, e) => {
+      // @ts-ignore
+      if (e.errorCode === sdk.CancellationErrorCode.ErrorAPIKey) {
+        console.error("Invalid or incorrect subscription key");
+      } else {
+        console.log(`Canceled: ${e.errorDetails}`);
+        showToast(`Canceled: ${e.errorDetails}`);
+      }
+      setIsListening(false);
+      setWaiting(false);
+    };
+
+    newRecognizer.sessionStopped = (s, e) => {
+      console.log("Session stopped");
+      newRecognizer.stopContinuousRecognitionAsync();
+      setIsListening(false);
+      setWaiting(false);
+    };
+
+    newRecognizer.startContinuousRecognitionAsync(
+      () => {
+        setWaiting(false);
+        console.log("Listening...");
+      },
+      (error) => {
+        console.log(`Error: ${error}`);
+        showToast(`Azure识别出错`);
+        newRecognizer.stopContinuousRecognitionAsync();
+        setIsListening(false);
+      },
+    );
+
+    setRecognizer(newRecognizer);
+  };
+
+  //开始录音
+  const startRecording = () => {
+    setStatus("recording");
+    if (!isMobile) {
+      inputRef.current?.focus();
+    }
+  };
+
+  //停止录音
+  function stopRecording() {
+    setStatus("idle");
+  }
+
   type RenderMessage = Message & { preview?: boolean };
 
   const chatStore = useChatStore();
@@ -638,41 +760,6 @@ export function Chat() {
   const isChat = location.pathname === Path.Chat;
   const autoFocus = !isMobileScreen || isChat; // only focus in chat page
 
-  const iatRecorder = new Iat.IatRecorder("zh_cn", "mandarin");
-  let speech_status = "";
-  //状态改变时处罚
-  iatRecorder.onWillStatusChange = function (
-    oldStatus: string,
-    status: string,
-  ) {
-    // 可以在这里进行页面中一些交互逻辑处理：倒计时（听写只有60s）,录音的动画，按钮交互等
-    // 按钮中的文字
-    // var text = {
-    //   null: '开始识别', // 最开始状态
-    //   init: '开始识别', // 初始化状态
-    //   ing: '结束识别', // 正在录音状态
-    //   end: '开始识别', // 结束状态
-    // };
-    //let senconds = 0
-    // $('.taste-button')
-    //   .removeClass(`status-${oldStatus}`)
-    //   .addClass(`status-${status}`)
-    //   .text(text[status])
-    speech_status = status;
-    if (status === "ing") {
-      console.log("speeching.");
-    } else if (status === "init") {
-      console.log("mic init ok.");
-    } else {
-      //setUserInput(iatRecorder.resultText);
-    }
-  };
-
-  // 监听识别结果的变化
-  iatRecorder.onTextChange = function (text: string) {
-    setUserInput(text);
-  };
-
   return (
     <div className={styles.chat} key={session.id}>
       <div className="window-header">
@@ -852,23 +939,8 @@ export function Chat() {
             inputRef.current?.focus();
             onSearch("");
           }}
-          stopSpeech={() => {
-            iatRecorder.stop();
-            console.log("stop speech.");
-          }}
-          startSpeech={() => {
-            // ======================开始调用=============================
-            // console.log("speech_status", speech_status);
-            // console.log("iatRecorder_status", iatRecorder.status);
-            // if (speech_status === "ing") {
-            //   iatRecorder.stop();
-            //   console.log("stop speech.");
-            // } else {
-            iatRecorder.start();
-            //   //console.log("start speech.");
-            showToast("请开始说出您的需求");
-            // }
-          }}
+          stopSpeech={stopRecording}
+          startSpeech={startRecording}
         />
         <div className={styles["chat-input-panel-inner"]}>
           <textarea

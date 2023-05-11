@@ -138,12 +138,13 @@
       padding: 0px;
     }
     .btn2 p:last-child{
-      p{
+      a{
         background-color:#1b9d1b;
         border-radius: 32px;
         width: 43px;
         margin: 0px auto;
         margin-top: 5px;
+        display: block;
       }
       img{
         width: 28px;

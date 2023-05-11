@@ -441,6 +441,7 @@ export function Chat() {
     null,
   );
   const [showVideoPanel, setShowVideoPanel] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   useEffect(() => {
     if (status === "recording" && !isListening) {
@@ -533,16 +534,27 @@ export function Chat() {
     setRecognizer(newRecognizer);
   };
 
+  let myIsSpeaking = false;
   //开始录音
   const startRecording = () => {
-    setStatus("recording");
-    if (!isMobile) {
-      inputRef.current?.focus();
+    if (!myIsSpeaking) {
+      setStatus("recording");
+      setIsSpeaking(true);
+      myIsSpeaking = true;
+      if (!isMobile) {
+        inputRef.current?.focus();
+      }
+    } else {
+      setIsSpeaking(false);
+      myIsSpeaking = false;
+      setStatus("idle");
     }
   };
 
   //停止录音
   function stopRecording() {
+    setIsSpeaking(false);
+    myIsSpeaking = false;
     setStatus("idle");
   }
 
@@ -991,7 +1003,6 @@ export function Chat() {
                 onFocus={() => setAutoScroll(true)}
                 onBlur={() => setAutoScroll(false)}
                 rows={4}
-                autoFocus={autoFocus}
               />
             </div>
             <div className={chatStyle["speak-btn"]}>
@@ -1004,15 +1015,15 @@ export function Chat() {
                 )}
               </div>
               <div className={chatStyle["btn2"]}>
-                <p>按住说话</p>
+                <p>{isSpeaking ? "停止说话" : "按住说话"}</p>
                 <p>
-                  <p>
+                  <a href="javascript:void(0)">
                     <img src="/video.png" onClick={startRecording}></img>
-                  </p>
+                  </a>
                 </p>
               </div>
               <div className={chatStyle["btn3"]}>
-                <span>发送</span>
+                <span onClick={onUserSubmit}>发送</span>
               </div>
             </div>
           </div>

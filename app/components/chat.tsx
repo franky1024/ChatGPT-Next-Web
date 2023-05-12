@@ -427,6 +427,7 @@ type baseStatus = "idle" | "waiting" | "speaking" | "recording";
 const subscriptionKey = "7fed2d7dc3914996b2f16a59bf66081b";
 const region = "eastus";
 const language = "zh-CN";
+let myIsSpeaking = false;
 
 export function Chat() {
   const [status, setStatus] = useState<baseStatus>("idle");
@@ -534,10 +535,10 @@ export function Chat() {
     setRecognizer(newRecognizer);
   };
 
-  let myIsSpeaking = false;
   //开始录音
   const startRecording = () => {
     if (!myIsSpeaking) {
+      console.log("开始说话");
       setStatus("recording");
       setIsSpeaking(true);
       myIsSpeaking = true;
@@ -545,6 +546,7 @@ export function Chat() {
         inputRef.current?.focus();
       }
     } else {
+      console.log("停止说话");
       setIsSpeaking(false);
       myIsSpeaking = false;
       setStatus("idle");
@@ -1008,11 +1010,12 @@ export function Chat() {
             <div className={chatStyle["speak-btn"]}>
               <div className={chatStyle["btn1"]}>
                 {/* //"idle" | "waiting" | "speaking" | "recording" */}
-                {status === "recording" ? (
+                {/* {status === "recording" ? (
                   <span onClick={btnShowVideoPanel}>清空{status}</span>
                 ) : (
                   <span onClick={btnHideVideoPanel}>关闭</span>
-                )}
+                )} */}
+                <span onClick={btnHideVideoPanel}>关闭</span>
               </div>
               <div className={chatStyle["btn2"]}>
                 <p>{isSpeaking ? "停止说话" : "按住说话"}</p>

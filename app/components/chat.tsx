@@ -429,6 +429,33 @@ const region = "eastus";
 const language = "zh-CN";
 let myIsSpeaking = false;
 
+function getUserMedia(constrains) {
+  if (navigator.mediaDevices.getUserMedia) {
+    // 最新标准API
+    navigator.mediaDevices
+      .getUserMedia(constrains)
+      .then((stream) => {})
+      .catch((err) => {});
+  } else if (navigator.webkitGetUserMedia) {
+    // webkit内核浏览器
+    navigator
+      .webkitGetUserMedia(constrains)
+      .then((stream) => {})
+      .catch((err) => {});
+  } else if (navigator.mozGetUserMedia) {
+    // Firefox浏览器
+    navigator
+      .mozGetUserMedia(constrains)
+      .then((stream) => {})
+      .catch((err) => {});
+  } else if (navigator.getUserMedia) {
+    // 旧版API
+    navigator
+      .getUserMedia(constrains)
+      .then((stream) => {})
+      .catch((err) => {});
+  }
+}
 export function Chat() {
   const [status, setStatus] = useState<baseStatus>("idle");
   const [finished, setFinished] = useState<boolean>(true); // audio finished playing
@@ -783,6 +810,17 @@ export function Chat() {
 
   function btnShowVideoPanel() {
     console.log("显示");
+
+    if (
+      navigator.mediaDevices.getUserMedia ||
+      navigator.getUserMedia ||
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia
+    ) {
+      getUserMedia({ audio: true }); // 调用用户媒体设备，访问摄像头、录音
+    } else {
+      alert("你的浏览器不支持访问用户媒体设备");
+    }
     setShowVideoPanel(true);
   }
   function btnHideVideoPanel() {

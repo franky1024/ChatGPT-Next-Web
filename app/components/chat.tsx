@@ -430,31 +430,41 @@ const language = "zh-CN";
 let myIsSpeaking = false;
 
 function getUserMedia(constrains) {
+  console.log("麦克风授权");
   if (navigator.mediaDevices.getUserMedia) {
     // 最新标准API
     navigator.mediaDevices
       .getUserMedia(constrains)
       .then((stream) => {})
-      .catch((err) => {});
+      .catch((err) => {
+        alert("麦克风授权失败，" + err);
+      });
   } else if (navigator.webkitGetUserMedia) {
     // webkit内核浏览器
     navigator
       .webkitGetUserMedia(constrains)
       .then((stream) => {})
-      .catch((err) => {});
+      .catch((err) => {
+        alert("麦克风授权失败，" + err);
+      });
   } else if (navigator.mozGetUserMedia) {
     // Firefox浏览器
     navigator
       .mozGetUserMedia(constrains)
       .then((stream) => {})
-      .catch((err) => {});
+      .catch((err) => {
+        alert("麦克风授权失败，" + err);
+      });
   } else if (navigator.getUserMedia) {
     // 旧版API
     navigator
       .getUserMedia(constrains)
       .then((stream) => {})
-      .catch((err) => {});
+      .catch((err) => {
+        alert("麦克风授权失败，" + err);
+      });
   }
+  console.log("麦克风授权完毕");
 }
 export function Chat() {
   const [status, setStatus] = useState<baseStatus>("idle");

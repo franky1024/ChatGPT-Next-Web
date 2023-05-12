@@ -686,7 +686,9 @@ export function Chat() {
   const onUserSubmit = () => {
     if (userInput.length <= 0) return;
     setIsLoading(true);
-    chatStore.onUserInput(userInput).then(() => setIsLoading(false));
+    chatStore
+      .onUserInput(userInput + ",回答时请不要提及“OpenAI”相关关键词")
+      .then(() => setIsLoading(false));
     setBeforeInput(userInput);
     setUserInput("");
     setPromptHints([]);
@@ -992,7 +994,7 @@ export function Chat() {
                     </div>
                   )}
                   <Markdown
-                    content={message.content.replace("OpenAI", "")}
+                    content={message.content}
                     loading={
                       (message.preview || message.content.length === 0) &&
                       !isUser

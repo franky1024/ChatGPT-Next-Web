@@ -586,6 +586,7 @@ export function Chat() {
       console.log("停止说话");
       setIsSpeaking(false);
       myIsSpeaking = false;
+      let yy = 1;
       setStatus("idle");
     }
   };

@@ -241,7 +241,7 @@ export const useChatStore = create<ChatStore>()(
       async onUserInput(content) {
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
-
+        content = content + ",回答时请不要提及“OpenAI”相关关键词";
         const userMessage: Message = createMessage({
           role: "user",
           content,

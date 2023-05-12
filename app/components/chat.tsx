@@ -1005,6 +1005,7 @@ export function Chat() {
                 onFocus={() => setAutoScroll(true)}
                 onBlur={() => setAutoScroll(false)}
                 rows={4}
+                readOnly
               />
             </div>
             <div className={chatStyle["speak-btn"]}>

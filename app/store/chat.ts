@@ -14,6 +14,7 @@ import { showToast } from "../components/ui-lib";
 import { DEFAULT_CONFIG, ModelConfig, ModelType, useAppConfig } from "./config";
 import { createEmptyMask, Mask } from "./mask";
 import { StoreKey } from "../constant";
+import { Console } from "console";
 
 export type Message = ChatCompletionResponseMessage & {
   date: string;
@@ -228,6 +229,7 @@ export const useChatStore = create<ChatStore>()(
       },
 
       onNewMessage(message) {
+        console.log("[onNewMessage][message]", message);
         get().updateCurrentSession((session) => {
           session.lastUpdate = Date.now();
         });
@@ -267,6 +269,7 @@ export const useChatStore = create<ChatStore>()(
         console.log("[User Input] ", sendMessages);
         requestChatStream(sendMessages, {
           onMessage(content, done) {
+            console.log("[content]", content);
             // stream response
             if (done) {
               botMessage.streaming = false;

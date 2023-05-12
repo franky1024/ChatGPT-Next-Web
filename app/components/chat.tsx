@@ -535,6 +535,46 @@ export function Chat() {
     setRecognizer(newRecognizer);
   };
 
+  //生成语音
+  const generateSpeech = async (text: string) => {
+    stopSpeechSynthesis();
+    setStatus("speaking");
+    setFinished(false);
+
+    let language: string = "zh-CN";
+    let voiceName: string = "zh-CN-XiaochenNeural";
+    let rate: number = 1;
+    let pitch: number = 1;
+    let region: string = "eastus";
+    let secretAccessKey: string = "7fed2d7dc3914996b2f16a59bf66081b";
+
+    speechSynthesis({
+      text: text,
+      service: "Azure TTS",
+      language: language,
+      rate: rate,
+      pitch: pitch,
+      voiceName: voiceName,
+      engine: "",
+      region: region,
+      accessKeyId: "",
+      secretAccessKey: secretAccessKey,
+    })
+      .then(() => {
+        console.log("Audio finished playing");
+        setStatus("idle");
+        setFinished(true);
+      })
+      .catch((error) => {
+        if (error.error === "interrupted") {
+          console.log("Speech synthesis interrupted");
+        } else {
+          console.error("An error occurred during speech synthesis:", error);
+        }
+        setStatus("idle");
+      });
+  };
+
   //开始录音
   const startRecording = () => {
     if (!myIsSpeaking && true) {

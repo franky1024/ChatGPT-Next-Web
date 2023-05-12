@@ -992,7 +992,7 @@ export function Chat() {
                     </div>
                   )}
                   <Markdown
-                    content={message.content}
+                    content={message.content.replace("OpenAI", "")}
                     loading={
                       (message.preview || message.content.length === 0) &&
                       !isUser

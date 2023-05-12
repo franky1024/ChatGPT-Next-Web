@@ -229,7 +229,10 @@ export const useChatStore = create<ChatStore>()(
       },
 
       onNewMessage(message) {
-        console.log("[onNewMessage][message]", message);
+        console.log("[onNewMessage][message]", message.content);
+        if (message.content.indexOf("OpenAI") > 0)
+          message.content.replace("OpenAI", "MGC");
+
         get().updateCurrentSession((session) => {
           session.lastUpdate = Date.now();
         });
@@ -269,7 +272,6 @@ export const useChatStore = create<ChatStore>()(
         console.log("[User Input] ", sendMessages);
         requestChatStream(sendMessages, {
           onMessage(content, done) {
-            console.log("[content]", content);
             // stream response
             if (done) {
               botMessage.streaming = false;

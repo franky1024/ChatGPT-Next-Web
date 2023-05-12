@@ -574,7 +574,7 @@ export function Chat() {
 
   //开始录音
   const startRecording = () => {
-    if (!myIsSpeaking) {
+    if (!myIsSpeaking && true) {
       console.log("开始说话");
       setStatus("recording");
       setIsSpeaking(true);

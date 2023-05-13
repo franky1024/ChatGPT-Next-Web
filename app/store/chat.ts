@@ -280,8 +280,8 @@ export const useChatStore = create<ChatStore>()(
                 botMessage.id ?? messageIndex,
               );
             } else {
-              botMessage.content = content;
-              set(() => ({}));
+              //botMessage.content = content;
+              //set(() => ({}));
             }
           },
           onError(error, statusCode) {

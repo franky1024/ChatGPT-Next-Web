@@ -241,7 +241,7 @@ export const useChatStore = create<ChatStore>()(
       async onUserInput(content) {
         const session = get().currentSession();
         const modelConfig = session.mask.modelConfig;
-        let user_msg = content + ",回答时请不要提及“OpenAI”相关关键词";
+        let user_msg = content;
         const userMessage: Message = createMessage({
           role: "user",
           content: user_msg,
@@ -270,6 +270,7 @@ export const useChatStore = create<ChatStore>()(
         console.log("[User Input] ", sendMessages);
         requestChatStream(sendMessages, {
           onMessage(content, done) {
+            content.replace("OpenAI", "MGC");
             // stream response
             if (done) {
               botMessage.streaming = false;

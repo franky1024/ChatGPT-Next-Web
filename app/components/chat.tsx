@@ -390,12 +390,12 @@ export function ChatActions(props: {
         ) : null}
       </div>
 
-      <div
+      {/* <div
         className={`${chatStyle["chat-input-action"]} clickable`}
         onClick={props.showPromptHints}
       >
         <PromptIcon />
-      </div>
+      </div> */}
 
       <div
         className={`${chatStyle["chat-input-action"]} clickable`}

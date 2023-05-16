@@ -1007,7 +1007,7 @@ export function Chat() {
                     parentRef={scrollRef}
                     defaultShow={i >= messages.length - 10}
                   />
-                  {!isUser && !message.preview && (
+                  {!isUser && !isLoading && (
                     <IconButton
                       key="play"
                       shadow
@@ -1016,7 +1016,7 @@ export function Chat() {
                     />
                   )}
                 </div>
-                {!isUser && !message.preview && !isLoading && (
+                {!isUser && !message.preview && (
                   <div className={styles["chat-message-actions"]}>
                     <div className={styles["chat-message-action-date"]}>
                       {message.date.toLocaleString()}

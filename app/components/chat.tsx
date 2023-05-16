@@ -1016,7 +1016,7 @@ export function Chat() {
                     />
                   )}
                 </div>
-                {!isUser && !message.preview && (
+                {!isUser && !message.preview && !isLoading && (
                   <div className={styles["chat-message-actions"]}>
                     <div className={styles["chat-message-action-date"]}>
                       {message.date.toLocaleString()}

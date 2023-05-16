@@ -537,7 +537,9 @@ export function Chat() {
   };
 
   //生成语音
-  const generateSpeech = async (text: string) => {
+  const generateSpeech = async (text: string, preview?: boolean) => {
+    if (preview) return;
+
     stopSpeechSynthesis();
     setStatus("speaking");
     setFinished(false);
@@ -1007,12 +1009,14 @@ export function Chat() {
                     parentRef={scrollRef}
                     defaultShow={i >= messages.length - 10}
                   />
-                  {!isUser && !isLoading && (
+                  {!isUser && (
                     <IconButton
                       key="play"
                       shadow
                       icon={<PlayIcon />}
-                      onClick={() => generateSpeech(message.content)}
+                      onClick={() =>
+                        generateSpeech(message.content, showTyping)
+                      }
                     />
                   )}
                 </div>

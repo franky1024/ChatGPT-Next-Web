@@ -1007,12 +1007,14 @@ export function Chat() {
                     parentRef={scrollRef}
                     defaultShow={i >= messages.length - 10}
                   />
-                  <IconButton
-                    key="play"
-                    shadow
-                    icon={<PlayIcon />}
-                    onClick={() => generateSpeech(message.content)}
-                  />
+                  {!isUser && !message.preview && (
+                    <IconButton
+                      key="play"
+                      shadow
+                      icon={<PlayIcon />}
+                      onClick={() => generateSpeech(message.content)}
+                    />
+                  )}
                 </div>
                 {!isUser && !message.preview && (
                   <div className={styles["chat-message-actions"]}>

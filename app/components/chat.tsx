@@ -9,6 +9,7 @@ import RenameIcon from "../icons/rename.svg";
 import ExportIcon from "../icons/share.svg";
 import ReturnIcon from "../icons/return.svg";
 import CopyIcon from "../icons/copy.svg";
+import PlayIcon from "../icons/play.svg";
 import DownloadIcon from "../icons/download.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import PromptIcon from "../icons/prompt.svg";
@@ -1005,6 +1006,12 @@ export function Chat() {
                     fontSize={fontSize}
                     parentRef={scrollRef}
                     defaultShow={i >= messages.length - 10}
+                  />
+                  <IconButton
+                    key="play"
+                    shadow
+                    icon={<PlayIcon />}
+                    onClick={() => generateSpeech(message.content)}
                   />
                 </div>
                 {!isUser && !message.preview && (

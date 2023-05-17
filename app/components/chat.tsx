@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { isMobile } from "react-device-detect";
 import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 
-import SendWhiteIcon from "../icons/send-white.svg";
+import SendWhiteIcon from "../icons/send.svg";
 import BrainIcon from "../icons/brain.svg";
 import RenameIcon from "../icons/rename.svg";
 import ExportIcon from "../icons/share.svg";
@@ -378,7 +378,7 @@ export function ChatActions(props: {
         </div>
       )} */}
 
-      <div
+      {/* <div
         className={`${chatStyle["chat-input-action"]} clickable`}
         onClick={nextTheme}
       >
@@ -389,7 +389,7 @@ export function ChatActions(props: {
         ) : theme === Theme.Dark ? (
           <DarkIcon />
         ) : null}
-      </div>
+      </div> */}
 
       {/* <div
         className={`${chatStyle["chat-input-action"]} clickable`}
@@ -411,7 +411,7 @@ export function ChatActions(props: {
         className={`${chatStyle["chat-input-action"]} clickable`}
         onClick={props.startSpeech}
       >
-        <Speech1Icon />
+        <SpeechIcon />
       </div>
       {/* 
       <div
@@ -1063,6 +1063,7 @@ export function Chat() {
           <IconButton
             icon={<SendWhiteIcon />}
             title={Locale.Chat.Send}
+            text="发送"
             className={styles["chat-input-send"]}
             type="danger"
             onClick={onUserSubmit}

@@ -270,7 +270,6 @@ export const useChatStore = create<ChatStore>()(
         console.log("[User Input] ", sendMessages);
         requestChatStream(sendMessages, {
           onMessage(content, done) {
-            content = content.replace("OpenAI", "MGC");
             // stream response
             if (done) {
               botMessage.streaming = false;
@@ -281,8 +280,8 @@ export const useChatStore = create<ChatStore>()(
                 botMessage.id ?? messageIndex,
               );
             } else {
-              //botMessage.content = content;
-              //set(() => ({}));
+              botMessage.content = content;
+              set(() => ({}));
             }
           },
           onError(error, statusCode) {

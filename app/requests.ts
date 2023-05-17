@@ -154,6 +154,14 @@ export async function requestChatStream(
     onController?: (controller: AbortController) => void;
   },
 ) {
+  messages = messages.concat([
+    {
+      role: "user",
+      content: "当问到你是谁时,请不要提到任何OpenAI的关键词",
+      date: new Date().toLocaleString(),
+    },
+  ]);
+
   const req = makeRequestParam(messages, {
     stream: true,
     overrideModel: options?.overrideModel,

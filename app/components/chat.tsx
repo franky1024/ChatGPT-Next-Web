@@ -1009,7 +1009,7 @@ export function Chat() {
                     parentRef={scrollRef}
                     defaultShow={i >= messages.length - 10}
                   />
-                  {!isUser && (
+                  {!showTyping && (
                     <IconButton
                       key="play"
                       shadow

@@ -538,9 +538,9 @@ export function Chat() {
 
   //生成语音
   const generateSpeech = async (text: string, preview?: boolean) => {
-    if (preview) return;
+    if (!finished) return;
 
-    stopSpeechSynthesis();
+    // stopSpeechSynthesis();
     setStatus("speaking");
     setFinished(false);
 
@@ -575,6 +575,7 @@ export function Chat() {
           console.error("An error occurred during speech synthesis:", error);
         }
         setStatus("idle");
+        setFinished(true);
       });
   };
 
@@ -1009,7 +1010,7 @@ export function Chat() {
                     parentRef={scrollRef}
                     defaultShow={i >= messages.length - 10}
                   />
-                  {!isUser && (
+                  {!showTyping && (
                     <IconButton
                       key="play"
                       shadow
